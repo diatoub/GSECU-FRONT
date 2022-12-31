@@ -1,0 +1,238 @@
+<!-- <div class="preloader" *ngIf="isSpinnerVisible">
+  <div class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+</div> -->
+<div class="row" >
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="d-flex mb-3 mt-0" [formGroup]="filterForm">
+        <input type="text" formControlName="mot_cles" class="form-control w-25" placeholder="">
+        <button class="btn btn-success ml-2" (click)="gty(1)">Rechercher</button>
+        <div></div>
+        <button class="btn btn-primary ml-auto" (click)="openModal(addMaterielModal, null)">Ajouter Matériel</button>
+      </div>
+
+      <div class="table-responsive table-bordered">
+        <table class="table table-striped mb-0 no-wrap v-middle">
+          <thead>
+          <tr>
+            <th scope="col" style="text-align:center">Site<i class='fa fa-sort ml-1'></i></th>
+            <th scope="col" style="text-align:center">Type de matériel<i class='fa fa-sort ml-1'></i></th>
+            <th scope="col" style="text-align:center">Quantité<i class='fa fa-sort ml-1'></i></th>
+            <th scope="col" style="text-align:center">Etat<i class='fa fa-sort ml-1'></i></th>
+            <th scope="col" style="text-align:center">Action</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="materielList">
+          <tr *ngFor="let item of materielList | paginate: {
+            itemsPerPage: itemPerPage,
+            currentPage: page,
+            totalItems: totalItem }
+            ">
+            <td style="text-align:center">{{ item.site.libelle }}</td>
+            <td style="text-align:center">{{ item.typeMateriel.libelle }}</td>
+            <td style="text-align:center">{{ item.quantite }}</td>
+            <td style="text-align:center"> 
+              <span class="badge badge-success px-3 font-medium" *ngIf="item.etat">
+                <ngb-highlight [result]="'Activé'" [term]="searchTerm"></ngb-highlight>
+              </span>
+              <span class="badge badge-danger px-3 font-medium" *ngIf="!item.etat">
+                <ngb-highlight [result]="'Désactivé'" [term]="searchTerm"></ngb-highlight>
+              </span>
+            </td>
+            <td style="text-align:center">
+              <a href="javascript: void(0);" (click)="openModal(editMaterielModal, item)" class="text-success link mr-2"
+                 placement="top" ngbTooltip="Modifier">
+                <i-feather name="edit-2" class="feather-sm"></i-feather>
+              </a>
+              <a href="javascript: void(0);" class="text-danger link" (click)="openModal(deleteModal, item)" placement="top"
+                 ngbTooltip="Supprimer">
+                <i-feather name="trash-2" class="feather-sm"></i-feather>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-2 mb-2">
+        <pagination-controls (pageChange)="gty(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #editMaterielModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editMaterielLabel">
+      <span> 
+        <i-feather name="edit-2" class="feather-sm"></i-feather> Materiel</span>
+    </h5>
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editMateriel" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="typemateriel" class="col-sm-4 col-form-label">Type de matériel</label>
+        <div class="col-sm-8">
+          <select name="" id="" formControlName="typeMateriel" class="form-control">
+            <option *ngFor="let item of listTypeMateriel" value="{{item.id}}">{{item.libelle}}</option>
+          </select>
+          <div class="text-danger" *ngIf="!editMateriel.get('typeMateriel').valid && (editMateriel.get('typeMateriel').dirty || editMateriel.get('typeMateriel').touched)">
+            Veuillez choisir un type de Matériel!!
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="site" class="col-sm-4 col-form-label">Site</label>
+        <div class="col-sm-8">
+          <select name="" id="" formControlName="site" class="form-control">
+            <option *ngFor="let item of listSite" value="{{item.id}}">{{item.libelle}}</option>
+          </select>
+          <div class="text-danger" *ngIf="!editMateriel.get('site').valid && (editMateriel.get('site').dirty || editMateriel.get('site').touched)">
+            Veuillez choisir un Site!!
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="quantite" class="col-sm-4 col-form-label">Quantite</label>
+        <div class="col-sm-8">
+          <textarea class="form-control" formControlName="quantite" id="quantite">
+          </textarea>
+          <div class="text-danger" *ngIf="!editMateriel.get('quantite').valid && (editMateriel.get('quantite').dirty || editMateriel.get('quantite').touched)">
+            Veuillez saisir la quantite!
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="etat" class="col-sm-4 col-form-label">Activer ?</label>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <fieldset class="checkbox">
+                <label>
+                  <input type="checkbox" formControlName="etatMateriel" id="etat">
+                </label>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-danger message-error" *ngIf="successRequeteEdit === false">{{message}}</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+        <button type="submit" class="btn btn-primary" [disabled]="editMateriel.invalid">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #addMaterielModal let-modal>
+
+  <div class="modal-header">
+
+    <h5 class="modal-title" id="editMaterielLabel">
+      <span>
+        <i-feather name="plus" class="feather-sm"></i-feather>
+         Materiel
+      </span>
+    </h5>
+
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="addMateriel" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="typemateriel" class="col-sm-4 col-form-label">Type de matériel</label>
+        <div class="col-sm-8">
+          <select name="" id="" formControlName="typeMateriel" class="form-control">
+            <option *ngFor="let item of listTypeMateriel" value="{{item.id}}">{{item.libelle}}</option>
+          </select>
+          <div class="text-danger" *ngIf="!addMateriel.get('typeMateriel').valid && (addMateriel.get('typeMateriel').dirty || addMateriel.get('typeMateriel').touched)">
+            Veuillez choisir un type de Matériel!!
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="site" class="col-sm-4 col-form-label">Site</label>
+        <div class="col-sm-8">
+          <select name="" id="" formControlName="site" class="form-control">
+            <option *ngFor="let item of listSite" value="{{item.id}}">{{item.libelle}}</option>
+          </select>
+          <div class="text-danger" *ngIf="!addMateriel.get('site').valid && (addMateriel.get('site').dirty || addMateriel.get('site').touched)">
+            Veuillez choisir un Site!!
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="quantite" class="col-sm-4 col-form-label">Quantite</label>
+        <div class="col-sm-8">
+          <textarea class="form-control" formControlName="quantite" id="quantite">
+          </textarea>
+          <div class="text-danger" *ngIf="!addMateriel.get('quantite').valid && (addMateriel.get('quantite').dirty || addMateriel.get('quantite').touched)">
+            Veuillez saisir la quantite!
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="etat" class="col-sm-4 col-form-label">Activer ?</label>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <fieldset class="checkbox">
+                <label>
+                  <input type="checkbox" formControlName="etatMateriel" id="etat">
+                </label>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-danger" *ngIf="successRequeteAdd === false">{{message}}</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+        <button type="submit" class="btn btn-primary" [disabled]="addMateriel.invalid">Enregistrer</button>
+      </div>
+
+
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editQuestionLabel"><span>Confirmation</span></h5>
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form >
+      <div class="form-group">
+        <p class="mb-1">Voulez-vous confirmer la suppression de ce Materiel ?</p>
+          <p class="mt-0">
+            <br>
+            site: <span class="text-primary">{{materielDetail?.site.libelle}}</span>
+            <br>
+            type de matériel: <span class="text-primary">{{materielDetail?.typeMateriel.libelle}}</span>
+            <br>
+            Quantité: <span class="text-primary">{{materielDetail?.quantite}}</span>
+          </p>
+      </div>
+      <div class="form-group row">
+        <p *ngIf="successRequetDelete === false"><span class="message-error text-danger">{{messageError}}</span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+        <button (click)="deleteMateriel(materielDetail.id)" type="submit" class="btn btn-primary">Confirmer</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

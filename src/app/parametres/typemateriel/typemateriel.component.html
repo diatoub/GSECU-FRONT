@@ -1,0 +1,135 @@
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex mb-3 mt-0" [formGroup]="filterForm">
+            <input type="text" formControlName="mot_cles" class="form-control w-25" placeholder="Recherche par Libellé ">
+            <!-- <div class="ml-1 dl">
+              <select class="custom-select" formControlName="type">
+                <option value="ALL" selected>Choisir l'état</option>
+                <option value="1">Activés</option>
+                <option value="0">Désactivés</option>
+              </select>
+            </div> -->
+            <button class="btn btn-success ml-2" (click)="gty(1)">Rechercher</button>
+            <button class="btn btn-primary ml-auto" (click)="openModal(addMaterielModal, null)">Ajouter Matériel</button>
+          </div>
+          <div class="table-responsive table-bordered">
+            <table class="table table-striped mb-0 no-wrap v-middle">
+                <thead>
+            <tr>
+                <th>Libelle<i class='fa fa-sort ml-1'></i></th>
+                <th scope="col" style="text-align:center">Etat<i class='fa fa-sort ml-1'></i></th>
+                <th class="text-center" style="width: 90px;;">Action</th>
+            </tr>
+                </thead>
+        <tbody>
+          <tbody *ngIf="listTypeMateriel?.length > 0">
+            <tr *ngFor="let item of listTypeMateriel | paginate: {
+              itemsPerPage: itemPerPage,
+              currentPage: page,
+              totalItems: totalItem
+          }">
+                <td>{{ item.libelleMateriel }}</td>
+                <td style="text-align:center"> 
+                  <span class="badge badge-success px-3 font-medium" *ngIf="item.etat">
+                    <ngb-highlight [result]="'Activé'" ></ngb-highlight>
+                  </span>
+                  <span class="badge badge-danger px-3 font-medium" *ngIf="!item.etat">
+                    <ngb-highlight [result]="'Désactivé'" ></ngb-highlight>
+                  </span>
+                </td>
+                <td class="text-center">
+                  <a href="javascript: void(0);" (click)="openModal(addMaterielModal, item)" class="text-success link mr-2"
+                    placement="top" ngbTooltip="Modifier">
+                   <i-feather name="edit-2" class="feather-sm"></i-feather>
+                  </a>
+                  <a href="javascript: void(0);" class="text-danger link" (click)="openModal(deleteModal, item)" placement="top"
+                      ngbTooltip="Supprimer">
+                    <i-feather name="trash-2" class="feather-sm"></i-feather>
+                  </a>
+                </td>
+            </tr>
+        </tbody>
+        <div class="mt-2 mb-2">
+          <pagination-controls (pageChange)="gty(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+        </div>
+    </table>
+    </div>
+</div>
+
+
+  <ng-template #addMaterielModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editMaterielLabel">
+        <span>
+          <i-feather *ngIf="!materielDetail" name="plus" class="feather-sm"></i-feather>
+          <i-feather *ngIf="materielDetail" name="edit-2" class="feather-sm"></i-feather>
+          Type Materiel
+        </span>
+      </h5>
+  
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+      <form [formGroup]="addMateriel" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label for="libelleMateriel" class="col-sm-4 col-form-label">Libellé</label>
+          <div class="col-sm-8">
+            <input name="" id="" formControlName="libelleMateriel" class="form-control">
+            <div class="text-danger" *ngIf="!addMateriel.get('libelleMateriel').valid && (addMateriel.get('libelleMateriel').dirty || addMateriel.get('libelleMateriel').touched)">
+              Veuillez nommer le type de Matériel!!
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="etat" class="col-sm-4 col-form-label">Activer ?</label>
+          <div class="col-md-6">
+            <fieldset class="checkbox mt-2">
+              <label>
+                <input type="checkbox" formControlName="etatMateriel" id="etat">
+              </label>
+            </fieldset>
+          </div>
+        </div>
+        <p class="text-danger" *ngIf="successRequeteAdd === false">{{message}}</p>
+        <!-- <div class="modal-footer"> -->
+          <div class="row" style="width: 200px; margin: auto;">
+            <div class="text-end col-6">
+              <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Annuler</button>
+            </div>
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" [disabled]="addMateriel.invalid">Enregistrer</button>
+            </div>
+          </div>
+        <!-- </div> -->
+      </form>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editQuestionLabel"><span>Confirmation</span></h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form >
+        <div class="form-group row">
+          <p >Voulez-vous confirmer la suppression de ce Materiel: <span class="nom-question-activation text-info">{{materielDetail?.libelleMateriel}}</span></p>
+        </div>
+        <div class="form-group row">
+          <p *ngIf="successRequetDelete === false"><span class="message-error text-danger">{{messageError}}</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button (click)="deleteMateriel(MaterielDetail.id)" type="submit" class="btn btn-primary">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

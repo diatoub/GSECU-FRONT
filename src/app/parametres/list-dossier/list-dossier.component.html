@@ -1,0 +1,184 @@
+<!-- <div class="preloader" *ngIf="isSpinnerVisible">
+  <div class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+</div> -->
+<div class="row" >
+    <div class="col-12">
+      <div class="card card-body">
+        <div class="d-flex mb-3 mt-0" [formGroup]="filterForm">
+          <input type="text" formControlName="mot_cles" class="form-control w-25">
+          <button class="btn btn-success ml-2" (click)="gty(1)">Rechercher</button>
+          <button class="btn btn-primary ml-auto" (click)="openModal(addDossierModal, null)">Ajouter un dossier</button>
+        </div>
+  
+        <div class="table-responsive table-bordered">
+          <table class="table table-striped mb-0 no-wrap v-middle"> 
+            <thead>
+            <tr>
+              <th scope="col" style="text-align:center">Libellé<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Catégorie<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Nombre de jours de traitement<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Action</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="dossierList">
+            <tr *ngFor="let item of dossierList | paginate: {
+              itemsPerPage: itemPerPage,
+              currentPage: page,
+              totalItems: totalItem }
+              ">
+              <td style="text-align:center">{{ item.libelleDossier }}</td>
+              <td style="text-align:center">{{ item.categorie }}</td>
+              <td style="text-align:center">{{ item.delai}}</td>
+              <td style="text-align:center">
+                <a href="javascript: void(0);" (click)="openModal(editDossierModal, item)" class="text-success link mr-2"
+                   placement="top" ngbTooltip="Modifier">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="text-danger link" (click)="openModal(deleteModal, item)" placement="top"
+                   ngbTooltip="Supprimer">
+                  <i-feather name="trash-2" class="feather-sm"></i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-2 mb-2">
+          <pagination-controls (pageChange)="gty(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #editDossierModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editDossierLabel"><span>Modification Dossier</span></h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editDossier" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label for="typeDossier" class="col-sm-4 col-form-label">Libelle</label>
+          <div class="col-sm-8">
+            <input class="form-control" formControlName="libelleDossier" id="libelle" type="text">
+            <div class="text-danger" *ngIf="!editDossier.get('libelleDossier').valid && (editDossier.get('libelleDossier').dirty || editDossier.get('libelleDossier').touched)">
+              Veuillez choisir le libellé du type de dossier !!
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="site" class="col-sm-4 col-form-label">Categorie</label>
+          <div class="col-sm-8">
+            <select name="" id="" formControlName="categorie" class="form-control">
+              <option *ngFor="let item of listCategories" value="{{item.id}}">{{item.libelle}}</option>
+            </select>
+            <div class="text-danger" *ngIf="!editDossier.get('categorie').valid && (editDossier.get('categorie').dirty || editDossier.get('categorie').touched)">
+              Veuillez choisir une catégorie !!
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="quantite" class="col-sm-4 col-form-label">Nombre de jours de traitement</label>
+          <div class="col-sm-8">
+            <input class="form-control" formControlName="delai" id="delai" type="text" min="0">
+            <div class="text-danger" *ngIf="!editDossier.get('delai').valid && (editDossier.get('delai').dirty || editDossier.get('delai').touched)">
+              Veuillez saisir le nombre de jours de traitement !!
+            </div>
+          </div>
+        </div>
+        <p class="text-danger message-error" *ngIf="successRequeteEdit === false">{{message}}</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button type="submit" class="btn btn-primary" [disabled]="editDossier.invalid">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #addDossierModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editDossierLabel"><span>Nouveau Dossier</span></h5>
+  
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+      <form [formGroup]="addDossier" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label for="typeDossier" class="col-sm-4 col-form-label">Libelle</label>
+          <div class="col-sm-8">
+            <input class="form-control" formControlName="libelleDossier" id="libelle" type="text">
+            <div class="text-danger" *ngIf="!addDossier.get('libelleDossier').valid && (addDossier.get('libelleDossier').dirty || addDossier.get('libelleDossier').touched)">
+              Veuillez saisir le libellé du type de dossier !!
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-group row">
+          <label for="site" class="col-sm-4 col-form-label">Categorie</label>
+          <div class="col-sm-8">
+            <select name="" id="" formControlName="categorie" class="form-control" placeholder="choisir un type de dossier" >
+              <option *ngFor="let item of listCategories" value="{{item.id}}">{{item.libelle}}</option>
+            </select>
+            <div class="text-danger" *ngIf="!addDossier.get('categorie').valid && (addDossier.get('categorie').dirty || addDossier.get('categorie').touched)">
+              Veuillez choisir une catégorie !!
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="quantite" class="col-sm-4 col-form-label">Nombre de jours de traitement</label>
+          <div class="col-sm-8">
+            <input class="form-control" formControlName="delai" id="delai" type="number" min="0">
+            <div class="text-danger" *ngIf="!addDossier.get('delai').valid && (addDossier.get('delai').dirty || addDossier.get('delai').touched)">
+              Veuillez saisir le nombre de jours de traitement !!
+            </div>
+          </div>
+        </div>
+        <p class="text-danger" *ngIf="successRequeteAdd === false">{{message}}</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button type="submit" class="btn btn-primary" [disabled]="addDossier.invalid">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editQuestionLabel"><span>Confirmation</span></h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form >
+        <div class="form-group">
+          <p class="mb-1">Voulez-vous confirmer la suppression de ce Dossier ?</p>
+            <p class="mt-0">
+              <br>
+              libellé: <span class="text-primary">{{dossierDetail?.libelleDossier}}</span>
+              <br>
+              Catégorie: <span class="text-primary">{{dossierDetail?.categorie}}</span>
+              <br>
+              Nombre de jours de traitement: <span class="text-primary">{{dossierDetail?.delai}}</span>
+            </p>
+        </div>
+        <div class="form-group row">
+          <p *ngIf="successRequetDelete === false"><span class="message-error text-danger">{{messageError}}</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button (click)="deleteDossier(dossierDetail.id)" type="submit" class="btn btn-primary">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

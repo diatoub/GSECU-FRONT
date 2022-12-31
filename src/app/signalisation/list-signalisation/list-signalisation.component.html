@@ -1,0 +1,160 @@
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex mb-3 mt-0" [formGroup]="filterForm">
+            <input type="text" formControlName="mot_cles" class="form-control w-25" placeholder="Recherche par mots clés ">
+            <button class="btn btn-success ml-2" (click)="gty(1)">Rechercher</button>
+            <!-- <button class="btn btn-success ml-2" (click)="openModal(filtreModal, null)"><i-feather name="filter" class="feather-sm"></i-feather> Filtre</button> -->
+            <button class="btn btn-primary ml-auto" [routerLink]="['/signalisation/new']">Nouvelle Signalisation</button>
+          </div>
+          <div class="table-responsive table-bordered">
+            <table class="table table-striped mb-0 no-wrap v-middle">
+                <thead>
+            <tr>
+              <th scope="col">Libellé<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Date d'ajout<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Délai de livraison<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Site<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Etat<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Action</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="listSignalisation?.length > 0">
+            <tr *ngFor="let item of listSignalisation | paginate: {
+              itemsPerPage: itemPerPage,
+              currentPage: page,
+              totalItems: totalItem
+          }">
+              <td>{{ item.libelle}}</td>
+              <td style="text-align:center">{{ item.dateAjout | date: 'dd MMMM yyyy'}}</td>
+              <td style="text-align:center">{{ item.nbreJoursLivraison}} jours</td>
+              <td style="text-align:center">{{ item.site}}</td>
+              <td style="text-align:center"> 
+                <span class="badge badge-success px-3 font-medium" *ngIf="item.libelleetat == 'VALIDE'">
+                  <ngb-highlight [result]="'validée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-danger px-3 font-medium" *ngIf="item.libelleetat == 'CLOTURE'">
+                  <ngb-highlight [result]="'Cloturée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-primary px-3 font-medium" *ngIf="item.libelleetat == 'AFFECTE'">
+                  <ngb-highlight [result]="'Affectée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-warning px-3 font-medium" *ngIf="item.libelleetat == 'NOUVEAU'">
+                  <ngb-highlight [result]="'Nouveau'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-info px-3 font-medium" *ngIf="item.libelleetat == 'TRAITEMENT'">
+                  <ngb-highlight [result]="'Traitement'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-danger px-3 font-medium" *ngIf="item.libelleetat == 'REJETE'">
+                  <ngb-highlight [result]="'Rejetée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-secondary px-3 font-medium" *ngIf="item.libelleetat == 'OUVERT'">
+                  <ngb-highlight [result]="'Ouvert'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-purple px-3 font-medium" *ngIf="item.libelleetat == ' TRANSFERE'">
+                  <ngb-highlight [result]="'transférée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-cyan px-3 font-medium" *ngIf="item.libelleetat == 'ATTENTE_VALIDATION'">
+                  <ngb-highlight [result]="'attente de validation'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-black px-3 font-medium" *ngIf="item.libelleetat == 'SIGNE'">
+                  <ngb-highlight [result]="'signée'" [term]="searchTerm"></ngb-highlight>
+                </span>
+              </td>
+              <td style="text-align:center">
+                <a [routerLink]="['/signalisation/details-signalisation', item.id]" routerLinkActive="router-link-active"  class="text-success link mr-2"
+                   placement="top" ngbTooltip="Afficher">
+                  <i-feather name="eye" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="text-danger link" (click)="openModal(deleteSignalisation, item)" placement="top"
+                   ngbTooltip="Cloturer le dossier">
+                  <i-feather name="shield-off" class="feather-sm"></i-feather>
+                </a>
+                <!-- <a href="javascript: void(0);" class="text-success link" (click)="openModal(coutSignalisation, item)" placement="top"
+                   ngbTooltip="Cout de la Signalisation">
+                  <i-feather name="dollar-sign" class="feather-sm"></i-feather>
+                </a> -->
+              </td>
+            </tr>
+            </tbody>
+            <div class="mt-2 mb-2">
+              <pagination-controls (pageChange)="functionLesSignalisations(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+            </div>
+          </table>
+        </div>
+        <!-- <div *ngIf="materielList" class="d-flex justify-content-center mt-2">
+          <pagination-controls (pageChange)="gty(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+        </div> -->
+      </div>
+    </div>
+  
+  <ng-template #deleteSignalisation let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editQuestionLabel"><span>Confirmation</span></h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form >
+        <div class="form-group row">
+          <p >Voulez-vous confirmer la cloture de ce dossier? <span class="nom-question-activation text-info">{{signalisationDetail?.libelleSignalisation}}</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button (click)="deleteMateriel(signalisationDetail.id)" type="submit" class="btn btn-primary">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+ 
+  <ng-template #filtreModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editMaterielLabel">
+        <span>
+          <i-feather name="filter" class="feather-sm"></i-feather>
+           Filtre
+        </span>
+      </h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="filtreModal" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label for="nom" style="margin-left: 10px;">Du: </label>
+                <div class="col-sm-12">
+                  <input class="form-control" formControlName="dateDebut" id="dateDebut" type="date" style="border-radius: 10px;">
+                </div>
+          </div>
+          <div class="form-group col-sm-12 col-md-6">
+            <label for="prenom" style="margin-left: 10px;">Au: </label>
+              <div class="col-sm-12">
+                <input class="form-control" formControlName="dateFin" id="dateDebut" type="date" style="border-radius: 10px;">
+              </div>
+          </div>
+        </div>
+        
+  
+        <div class="form-group row">
+          <label for="etat" class="col-sm-2 col-form-label ml-2">Etat</label>
+          <div class="col-sm-11 ml-3">
+            <select name="" id="" formControlName="etats" class="form-control">
+              <option value="nouvelle">Nouvelle</option>
+              <option value="en_cours">En cours</option>
+              <option value="validé">Validé</option>
+              <option value="rejeté">Rejeté</option>
+              <option value="signée">Signée</option>
+              <option value="cloturée">Cloturée</option>
+            </select>
+            </div>
+        </div>
+       <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button type="submit" class="btn btn-primary">Filtrer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  

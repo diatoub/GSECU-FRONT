@@ -1,0 +1,106 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                        <img class="image-form-signalisation" src="../../../assets/images/11104.jpg" alt="" class="" sizes="10px" />
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <form [formGroup]="newSignalisationForm" (ngSubmit)="onSubmit()" class="form-vertical m-t-30 " id="form">
+                            <div class="col-sm-12 row">
+                                <div class="form-group  col-sm-12 col-md-6">
+                                    <label for="domaine" style="margin-left: 10px;">Signaleur</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control" placeholder="Choisir le Signaleur" formControlName="signaleur" style="border-radius:10px;">
+                                            <option *ngFor="let item of listUser" value="{{item.id}}">{{item.prenom}} {{item.nom}}</option>
+                                        </select>
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('signaleur').valid && (newSignalisationForm.get('signaleur').dirty || newSignalisationForm.get('signaleur').touched)">
+                                            Veuillez préciser le signaleur!!
+                                        </div>
+                                   </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="nomSignalisation" style="margin-left: 10px;">Nom de la Signalisation</label>
+                                    <div class="col-sm-12">
+                                        <input name="" id="" formControlName="libelle" class="form-control" style="border-radius:10px;">
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('libelle').valid && (newSignalisationForm.get('libelle').dirty || newSignalisationForm.get('libelle').touched)">
+                                            Veuillez donner le nom de la signalisation!!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group  col-sm-12 col-md-6">
+                                    <label for="domaine" style="margin-left: 10px;">Domaine de Signalisation</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control" placeholder="Choisir le Type de Signalisation" formControlName="type_signalisation" style="border-radius:10px;">
+                                            <option *ngFor="let item of listDomaine" value="{{item.id}}">{{item.libelle}}</option>
+                                        </select>
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('type_signalisation').valid && (newSignalisationForm.get('type_signalisation').dirty || newSignalisationForm.get('type_signalisation').touched)">
+                                            Veuillez préciser le domaine!!
+                                        </div>
+                                   </div>
+                                </div>
+                                <div class="form-group  col-sm-12 col-md-6">
+                                    <label for="materiel" style="margin-left: 10px;">Matériel en Panne</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control" placeholder="Choisir le Matériel en panne" formControlName="materiel_panne" style="border-radius:10px;">
+                                            <option *ngFor="let item of listTypeMateriel" value="{{item.id}}">{{item.libelle}}</option>
+                                        </select>
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('materiel_panne').valid && (newSignalisationForm.get('materiel_panne').dirty || newSignalisationForm.get('materiel_panne').touched)">
+                                            Veuillez préciser le matériel!!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="autre" style="margin-left: 10px;">Si le Matériel n'est pas listé, veuillez préciser</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="Autre Matériel" formControlName="autre_materiel" style="border-radius:10px;">
+                                    </div>
+                                </div>
+                                <div class="form-group  col-sm-12 col-md-6">
+                                    <label for="site" style="margin-left: 10px;">Site</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control" placeholder="Choisir le Site" formControlName="site" style="border-radius:10px;">
+                                            <option *ngFor="let item of listSite" value="{{item.id}}">{{item.libelle}}</option>
+                                        </select>
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('site').valid && (newSignalisationForm.get('site').dirty || newSignalisationForm.get('site').touched)">
+                                            Veuillez préciser le site!!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group  col-sm-12 col-md-6">
+                                    <label for="quantite" style="margin-left: 10px;">Quantité en panne</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="1,2,3.." formControlName="quantite_panne" style="border-radius:10px;">
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('quantite_panne').valid && (newSignalisationForm.get('quantite_panne').dirty || newSignalisationForm.get('quantite_panne').touched)">
+                                            Veuillez préciser la quantité!!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6" >
+                                    <label for="file" style="margin-left: 10px;">Pieces Jointes</label>
+                                    <div class="col-sm-12">
+                                        <input type="file" id="file" class="form-control" (change)="handleFileInput($event.target)" style="border-radius:10px;">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="description" style="margin-left: 10px;">Description de la Panne</label>
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" rows="3" formControlName="description_panne" style="border-radius:10px;"></textarea>
+                                        <div class="text-danger" *ngIf="!newSignalisationForm.get('description_panne').valid && (newSignalisationForm.get('description_panne').dirty || newSignalisationForm.get('description_panne').touched)">
+                                            Veuillez décrire votre panne!!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-danger text-center" *ngIf="errorMessage">{{errorMessage}}</p>
+                            <div class="text-center">
+                                <button type="submit" (click)="functionAddSignalisation()" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

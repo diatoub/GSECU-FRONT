@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-md-12">
+        <!--- Basic Table -->
+        <div class="card">
+            <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <h4 class="card-title mb-0"><span class="lstick"></span>Basic Table </h4>
+                    <span class="card-subtitle">Table is just a mapping of objects to table rows with <span class="text-danger">ngFor</span></span>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-success">Ajouter</button>
+                </div>
+            </div>
+            <table class="table table-striped border mt-4">
+                <thead>
+                    <tr>
+                        <th>Libelle</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of dataListe">
+                        <td>{{ item.nom }}</td>
+                        <td>
+                            {{item.prenom}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+</div>
+</div>
+<!--- Modal for complete Table -->
+<ng-template #editModal let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="editLabel">{{editAddLabel}} Client</h5>
+        <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="editClient" (ngSubmit)="onSubmit()">
+
+
+            <div class="form-group row">
+                <label for="fullName" class="col-sm-4 col-form-label">Full Name</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="fullName" id="fullName"
+                        (blur)=logValidationErrors(editClient)>
+                    <span class="help-block" *ngIf="formsErrors.fullName">
+                        {{formsErrors.fullName}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="userName" class="col-sm-4 col-form-label">User Name</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="UserName" id="userName"
+                        (blur)=logValidationErrors(editClient)>
+                    <span class="help-block" *ngIf="formsErrors.UserName">
+                        {{formsErrors.UserName}}
+                    </span>
+                </div>
+            </div>            
+            <div class="form-group row">
+                <label for="email" class="col-sm-4 col-form-label">Email</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" formControlName="email" id="email"
+                        (blur)=logValidationErrors(editClient)>
+                    <span class="help-block" *ngIf="formsErrors.email">
+                        {{formsErrors.email}}
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" (click)="closeBtnClick()">Close</button>
+
+                <button type="submit" class="btn btn-primary" [disabled]="editClient.invalid">Save</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<!--- Modal for complete Table -->

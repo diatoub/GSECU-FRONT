@@ -1,0 +1,91 @@
+<!-- <div class="preloader" *ngIf="isSpinnerVisible">
+  <div class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+</div> -->
+<div class="row" >
+    <div class="col-12">
+      <div class="card card-body">
+        <div class="d-flex mb-3 mt-0" [formGroup]="filterForm">
+          <input type="text" formControlName="email" class="form-control w-25">
+          <button class="btn btn-success ml-2" (click)="gty(1)">Rechercher</button>
+          <button class="btn btn-primary ml-auto" [routerLink]="['/users/adduser']">Ajouter un utilisateur</button>
+        </div>
+  
+        <div class="table-responsive table-bordered">
+          <table class="table table-striped mb-0 no-wrap v-middle">
+            <thead>
+            <tr>
+              <th scope="col">Prénom et Nom<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col">Nom d'utilisateur<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col">Adresse E-mail<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col">Profil<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col">Structure<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col" style="text-align:center">Etat<i class='fa fa-sort ml-1'></i></th>
+              <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="listUser?.length > 0">
+              <tr *ngFor="let item of listUser | paginate: {
+                itemsPerPage: itemPerPage,
+                currentPage: page,
+                totalItems: totalItem
+            }">
+              <td>{{ item.prenom}} {{ item.nom}}</td>
+              <td>{{ item.tmp}}</td>
+              <td>{{ item.email}}</td>
+              <td>{{ item.profil}}</td>
+              <td>{{ item.structure}}</td>
+              <td style="text-align:center"> 
+                <span class="badge badge-success px-3 font-medium" *ngIf="item.etat">
+                  <ngb-highlight [result]="'Activé'" [term]="searchTerm"></ngb-highlight>
+                </span>
+                <span class="badge badge-danger px-3 font-medium" *ngIf="!item.etat">
+                  <ngb-highlight [result]="'Désactivé'" [term]="searchTerm"></ngb-highlight>
+                </span>
+              </td>
+              <td>
+                <a [routerLink]="['/users/edituser', item.id]" [queryParams]="{user:item | json}"  routerLinkActive="router-link-active" class="text-success link mr-2"
+                   placement="top" ngbTooltip="Editer le profil">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="text-danger link" (click)="openModal(deleteModal, item)" placement="top"
+                   ngbTooltip="désactiver">
+                  <i-feather name="slash" class="feather-sm"></i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-2 mb-2">
+          <pagination-controls (pageChange)="gty(page = $event)" previousLabel="Précédent" nextLabel="Suivant"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #deleteModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editQuestionLabel"><span>Confirmation</span></h5>
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form >
+        <div class="form-group row">
+          <p class="mb-0">Voulez-vous confirmer la suppression de l'utilisateur 
+            <span class="text-primary">{{userDetail?.prenom}} {{userDetail?.nom}}</span>?
+          </p>
+        </div>
+        <div class="form-group row">
+          <p *ngIf="successRequetDelete === false"><span class="message-error text-danger">{{messageError}}</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Fermer</button>
+          <button (click)="deleteUser(userDetail.id)" type="submit" class="btn btn-primary">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

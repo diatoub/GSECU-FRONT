@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800');
+
+.ngx-pagination {
+    padding-left: 0px !important;
+    outline: none !important;
+    margin-bottom: 0px !important;
+    font-size: 14px;
+    cursor: pointer !important;
+}
+
+.ngx-pagination .current,
+.btn-info {
+    background: #ff7900 !important;
+    outline: none !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+}
+
+.ngx-pagination .current:hover {
+    background: #009393 !important;
+    outline: none !important;
+}

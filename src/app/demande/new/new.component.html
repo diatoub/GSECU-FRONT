@@ -1,0 +1,350 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title; font-weight-bold" style="font-size:35px;">Formulaire de demande</h4>
+            <div class="row">
+              <div class="col-sm-12 col-md-5">
+                <img class="image-form-demande" src="../../../assets/images/10172.jpg" alt="" />
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="col-sm-12">
+                  <ul [formGroup]="addDemande" (ngSubmit)="onSubmit()" ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                    <li [ngbNavItem]="1" formGroupName="infoDemandeur">
+                        <a ngbNavLink>Informations Demandeur</a>
+                        <ng-template ngbNavContent>
+                          <div class="row mt-3">
+                            <div class="form-group col-sm-12 col-md-6">
+                              <label for="besoin" style="margin-left: 10px;">Nature du besoin</label>
+                              <div class="col-sm-12">
+                                <select #typeDemande (change)="valueTypeDemande(typeDemande.value)" name="besoin" id="" formControlName="type_demande" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listTypeDeDemande" value="{{item.code}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('type_demande')?.valid && (addDemande.get('type_demande')?.dirty || addDemande.get('type_demande')?.touched)">
+                                  Veuillez sélectionner la nature de votre demande !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6">
+                              <label for="demandeur" style="margin-left: 10px;">Demandeur</label>
+                              <div class="col-sm-12">
+                                <select name="demandeur" id="" formControlName="demandeur" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of donnees" value="{{item.id}}">{{item.prenom}} {{item.nom}} ({{item.tmp}})</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('demandeur')?.valid && (addDemande.get('demandeur')?.dirty || addDemande.get('demandeur')?.touched)">
+                                  Veuillez sélectionner un demandeur !!
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                    </li>
+                    <li *ngIf="isValueType && itemTab3 == 3" [ngbNavItem]="itemTab2" formGroupName="infoBeneficier">
+                        <a ngbNavLink>Informations Bénéficiaires</a>
+                        <ng-template ngbNavContent>
+                          <div class="row mt-3">
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="prenom" style="margin-left: 10px;">Prénom</label>
+                              <div class="col-sm-12">
+                                <input class="form-control" formControlName="prenom" id="prenom" type="text" style="border-radius: 10px;">
+                                <div class="text-danger" *ngIf="!addDemande.get('prenom')?.valid && (addDemande.get('prenom')?.dirty || addDemande.get('prenom')?.touched)">
+                                  Veuillez saisir votre prénom !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="nom" style="margin-left: 10px;">Nom</label>
+                              <div class="col-sm-12">
+                                <input class="form-control" formControlName="nom" id="nom" type="text" style="border-radius: 10px;">
+                                <div class="text-danger" *ngIf="!addDemande.get('nom')?.valid && (addDemande.get('nom')?.dirty || addDemande.get('nom')?.touched)">
+                                  Veuillez saisir votre nom !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="matricule" style="margin-left: 10px;">Matricule</label>
+                              <div class="col-sm-12">
+                                <input class="form-control" formControlName="matricule" id="matricule" type="text" style="border-radius: 10px;">
+                                <div class="text-danger" *ngIf="!addDemande.get('matricule')?.valid && (addDemande.get('matricule')?.dirty || addDemande.get('matricule')?.touched)">
+                                  Veuillez saisir votre matricule !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="site" style="margin-left: 10px;">Site</label>
+                              <div class="col-sm-12">
+                                <select name="besoin" id="" formControlName="site" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listSite" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('site')?.valid && (addDemande.get('site')?.dirty || addDemande.get('site')?.touched)">
+                                  Veuillez choisir un site !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'DAA'">
+                              <label for="structure" style="margin-left: 10px;">Structure</label>
+                              <div class="col-sm-12">
+                                <select name="besoin" id="" formControlName="structure" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listStructure" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('structure')?.valid && (addDemande.get('structure')?.dirty || addDemande.get('structure')?.touched)">
+                                  Veuillez choisir une structure !!
+                                </div>
+                              </div>
+                            </div>
+                            <div formArrayName="lesBeneficiares" class="form-group col-sm-12 col-md-12" *ngIf="valueType == 'DAA'">
+                              <label for="lesBeneficiares" style="margin-left: 10px;" *ngIf="beneficiaires.length >= 1">Les Bénéficiaires</label>
+                              <div class="row border p-1 mb-2" *ngFor="let item of beneficiaires.controls; let i=index" [formGroupName]="i">
+                                <div class="col-sm-12 col-md-6">
+                                  <span>Prénom</span>
+                                  <input class="form-control" formControlName="prenom" id="prenom" type="text" style="border-radius: 10px;">
+                                  <div class="text-danger" *ngIf="!addDemande.get('prenom')?.valid && (addDemande.get('prenom')?.dirty || addDemande.get('prenom')?.touched)">
+                                    Veuillez saisir le prenom !!
+                                  </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                  <span>Nom</span>
+                                  <input class="form-control" formControlName="nom" id="nom" type="text" style="border-radius: 10px;">
+                                  <div class="text-danger" *ngIf="!addDemande.get('nom')?.valid && (addDemande.get('nom')?.dirty || addDemande.get('nom')?.touched)">
+                                    Veuillez saisir le nom  !!
+                                  </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                  <span>Email</span>
+                                  <input class="form-control" formControlName="email" id="email" type="email" style="border-radius: 10px;">
+                                  <div class="text-danger" *ngIf="!addDemande.get('email')?.valid && (addDemande.get('email')?.dirty || addDemande.get('email')?.touched)">
+                                    Veuillez saisir l'e-mail !!
+                                  </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                  <span>Numéro</span>
+                                  <input class="form-control" formControlName="numero" id="numero" type="text" style="border-radius: 10px;">
+                                  <div class="text-danger" *ngIf="!addDemande.get('numero')?.valid && (addDemande.get('numero')?.dirty || addDemande.get('numero')?.touched)">
+                                    Veuillez saisir le numéro !!
+                                  </div>
+                                </div>
+                                <button class="btn btn-danger ml-4 mt-3 mb-3" (click)="removeBeneficiaire(i)">Supprimer</button>
+                              </div>
+                              <button class="btn btn-success ml-4 mt-3 mb-3" (click)="addBeneficiare()">Ajouter un bénéficiaire</button>
+                              <p class="col-sm-6 col-md-1 ml-4 text-center"><u>OU</u></p>
+                              <p class="text-info ml-4" style="cursor: pointer;" (click)="saveFile()">Télécharger le modèle</p>
+                              <h3>Contraintes sur le fichier de chargement:</h3>
+                              <ul class="ul">
+                                <li class="big">
+                                    <span>Le fichier de chargement est structuré de la manière suivante:</span>
+                                    <ul>
+                                        <li><b>1ère colonne (Numéro):</b> Numéro (Matricule=interne ou CNI=externe)</li>
+                                        <li><b>2ème colonne (Nom):</b> Nom du bénéficiaire</li>
+                                        <li><b>3ème colonne (Prénom):</b> Prénom du bénéficiaire</li>
+                                        <li><b>4ème colonne (Email):</b> E-mail du bénéficiaire</li>
+                                    </ul>
+                                </li>
+                                <p>
+                                    <u><b>NB</b></u>:
+                                </p>
+                                <p style="color: red; font-size: 0.9em;">
+                                    <b>La première ligne du fichier est réservée aux titres des colonnes. Elle sera ignorée lors du chargement.</b><br>
+                                    <b>Le format du fichier doit être .xlsx ou .csv avec séparateur point-virgule.</b><br>
+                                </p>
+                            </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-6; text-left ml-4 mt-3 mb-3">
+                              <input type="file" formControlName="fileBeneficiaires" (change)="getFileBeneficiaire($event)" style="border-radius: 10px;">
+                              <p *ngIf="errorFile">{{errorFile}}</p>
+                            </div>
+                          </div>
+                        </ng-template>
+                    </li>
+                    <li *ngIf="isValueType" [ngbNavItem]="itemTab3" formGroupName="formulaire">
+                        <a ngbNavLink>Formulaire de demande</a>
+                        <ng-template ngbNavContent>
+                          <div class="row mt-3">
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA' || valueType == 'DAA'">
+                              <label for="date" style="margin-left: 10px;">Durée de validité</label>
+                              <div class="col-sm-12">
+                                <span>De :</span>
+                                <input class="form-control" formControlName="dateDebut" id="dateDebut" type="date" style="border-radius: 10px;">
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA' || valueType == 'DAA'">
+                              <label for="date" style="margin-left: 10px;"> - </label>
+                              <div class="col-sm-12">
+                                <span>A :</span>
+                                <input class="form-control" formControlName="dateFin" id="dateFin" type="date" style="border-radius: 10px;">
+                                <div class="text-danger" *ngIf="!addDemande.get('site')?.valid && (addDemande.get('site')?.dirty || addDemande.get('site')?.touched)">
+                                  Veuillez choisir une date !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="typeBagde" style="margin-left: 10px;">Type de badge</label>
+                              <div class="col-sm-12">
+                                <select name="typeDeBadge" id="" formControlName="type_badge" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listTypeBadge" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('type_badge')?.valid && (addDemande.get('type_badge')?.dirty || addDemande.get('typeDeBadge')?.touched)">
+                                  Veuillez choisir un type de badge !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="typeContrat" style="margin-left: 10px;">Type de contrat</label>
+                              <div class="col-sm-12">
+                                <select name="typeContrat" id="" formControlName="type_contrat" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listTypeContrat" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('type_contrat')?.valid && (addDemande.get('type_contrat')?.dirty || addDemande.get('typeDeContrat')?.touched)">
+                                  Veuillez choisir un type de contrat !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="type" style="margin-left: 10px;">S'agit-il</label>
+                              <div class="col-sm-12">
+                                <select name="type" id="" formControlName="objet_badge" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listObjet" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('objet_badge')?.valid && (addDemande.get('objet_badge')?.dirty || addDemande.get('objet_badge')?.touched)">
+                                  Veuillez choisir !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="motifDemande" style="margin-left: 10px;">Motif demande</label>
+                              <div class="col-sm-12">
+                                <select name="motifDemande" id="" formControlName="motif_demande" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listMotifDemande" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('motif_demande')?.valid && (addDemande.get('motif_demande')?.dirty || addDemande.get('motif_demande')?.touched)">
+                                  Veuillez choisir un motif de demande !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'COBA'">
+                              <label for="motifRemplacement" style="margin-left: 10px;">Motif remplacement</label>
+                              <div class="col-sm-12">
+                                <select name="motifRemplacement" id="" formControlName="motif_remplacement" class="form-control" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listMotifRemplacement" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('motif_remplacement')?.valid && (addDemande.get('motif_remplacement')?.dirty || addDemande.get('motif_remplacement')?.touched)">
+                                  Veuillez choisir un de remplacement !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'DAA'">
+                              <label for="qrcode" style="margin-left: 10px;">Envoyer les Qr Code au bénéficiaires</label>
+                              <div class="col-sm-6">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" (change)="fonctionForRadio($event.target.value)" name="qrcode" id="isQRCodeValue" value="true" style="border-radius: 10px;">
+                                  <label class="form-check-label" for="">
+                                    Oui
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" (change)="fonctionForRadio($event.target.value)" name="qrcode" id="isQRCodeValue" value="false" style="border-radius: 10px;">
+                                  <label class="form-check-label" for="">
+                                    Non
+                                  </label>
+                                </div>   
+                                <div class="text-danger" *ngIf="!addDemande.get('qrcode')?.valid && (addDemande.get('qrcode')?.dirty || addDemande.get('qrcode')?.touched)">
+                                    Veuillez choisir !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType !== 'COBA' && valueType !== 'DAA'">
+                              <label for="quantite" style="margin-left: 10px;">Quantité demandée</label>
+                              <div class="col-sm-12">
+                                <input class="form-control" formControlName="quantite" id="quantite" type="text" style="border-radius: 10px;">
+                                <div class="text-danger" *ngIf="!addDemande.get('quantite')?.valid && (addDemande.get('quantite')?.dirty || addDemande.get('quantite')?.touched)">
+                                  Veuillez saisir la Quantité !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6">
+                              <label for="objectAcces" style="margin-left: 10px;">Objet de l'accès</label>
+                              <div class="col-sm-12">
+                                <textarea class="form-control" formControlName="objectAcces" id="objectAcces" type="text" style="border-radius: 10px;"></textarea>
+                                <div class="text-danger" *ngIf="!addDemande.get('objectAcces')?.valid && (addDemande.get('objectAcces')?.dirty || addDemande.get('objectAcces')?.touched)">
+                                  Veuillez saisir l'objet d'accès !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'DAA'">
+                              <label for="epi" style="margin-left: 10px;">EPI</label>
+                              <div class="col-sm-12">
+                                <select class="form-control" formControlName="epi" id="epi" type="text" style="border-radius: 10px;">
+                                  <option *ngFor="let item of listAllEquipement" value="{{item.id}}">{{item.libelle}}</option>
+                                </select>
+                                <div class="text-danger" *ngIf="!addDemande.get('epi')?.valid && (addDemande.get('epi')?.dirty || addDemande.get('epi')?.touched)">
+                                  Veuillez saisir L'EPI !!
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6" *ngIf="valueType == 'DAA'">
+                              <label for="siteAcces" style="margin-left: 10px;">Site d'accès</label>
+                              <div class="col-sm-12">
+                                <ng-multiselect-dropdown 
+                                  formControlName="siteAcces"
+                                  [settings]="dropdownSettings"
+                                  [data]="dropdownList"
+                                  [(ngModel)]="selectedItems"
+                                  >
+                                </ng-multiselect-dropdown>
+                                <div class="text-danger" *ngIf="!addDemande.get('siteAcces')?.valid && (addDemande.get('siteAcces')?.dirty || addDemande.get('siteAcces')?.touched)">
+                                  Veuillez saisir le site d'accès !!
+                                </div>
+                              </div>  
+                            </div>
+                            <div formArrayName="lesFiles" class="form-group col-sm-12 col-md-12" *ngIf="valueType == 'COBA'">
+                              <label for="lesFiles" style="margin-left: 10px;" *ngIf="files.length >= 1">Les Fichiers</label>
+                              <div class="border mb-2 content-file-add" *ngFor="let item of files.controls; let a=index" [formGroupName]="a">
+                                <label for="lesFiles" class="ml-3">Pièce jointe {{a+1}}</label>
+                                <div class="row">
+                                  <div class="col-sm-12 col-md-4 ">
+                                    <span>Nom de la pièce jointe</span>
+                                    <input #libellePiece class="form-control" formControlName="libellePiece" id="libellePiece" type="text" style="border-radius: 10px;">
+                                    <div class="text-danger" *ngIf="!addDemande.get('libellePiece')?.valid && (addDemande.get('libellePiece')?.dirty || addDemande.get('libellePiece')?.touched)">
+                                      Veuillez saisir le nom de la PJ !!
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-7 ">
+                                    <span class="ml-2">Joindre le fichier</span>
+                                    <div class="col-sm-12 col-md-6; text-left mt-2 mb-3">
+                                      <input accept="image/*, .pdf" type="file" formControlName="file" (change)="getFile($event, libellePiece.value)">
+                                      <p *ngIf="errorFile">{{errorFile}}</p>
+                                    </div>                                  
+                                    <div class="text-danger" *ngIf="errorFile">{{errorFile}}</div>
+                                    <div class="text-danger" *ngIf="errorFile">{{errorFile}}</div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-1">
+                                    <i (click)="removeFile(a)" class="fa fa-trash text-danger mt-4" style="cursor: pointer; font-size: 22px;" 
+                                      aria-hidden="true" placement="top"  ngbTooltip="Supprimer"></i>
+                                  </div>
+                                </div>
+                              </div>
+                              <button class="btn btn-success ml-4 mt-3 mb-3" (click)="addFile()">Ajouter un fichier</button>
+                            </div> 
+                          </div>
+                          <!-- <div class="text-center">
+                            <button type="submit" class="btn btn-primary" (click)="onSubmit()">Enregistrer</button>
+                          </div> -->
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                <div class="row mt-3 mx-2">
+                  <div class="col-6">
+                    <button *ngIf="active !== 1" (click)="previous()" class="btn btn-secondary">Précédent</button>
+                  </div>
+                  <div class="col-6 justify-content-end">
+                    <button *ngIf="valueType && ((active !== 2 && itemTab3 === 2) || (active !== 3 && itemTab3 === 3))" (click)="next()" class="btn btn-primary text-end">Suivant</button>
+                    <button *ngIf="(active === 2 && itemTab3 === 2) || (active === 3 && itemTab3 === 3)" (click)="functionAddDemande()" class="btn btn-primary">Enregistrer</button>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

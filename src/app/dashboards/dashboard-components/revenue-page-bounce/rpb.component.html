@@ -1,0 +1,87 @@
+<div class="row">
+    <!-- column -->
+    <div class="col-lg-4">
+        <div class="card bg-primary text-white  card-hover">
+            <div class="card-body">
+                <h4 class="card-title" style="font-size:40px;"><i ngbTooltip="Signalisations" class="mdi mdi-alert-circle"></i></h4>
+                <div class="d-flex align-items-center m-t-30">
+                    <div class="mt-3 d-flex flex-column" style="height: 84px; width: 100px">
+                        <apx-chart [series]="RevenueChartOptions.series" [chart]="RevenueChartOptions.chart"
+                            [stroke]="RevenueChartOptions.stroke" [tooltip]="RevenueChartOptions.tooltip"
+                            [fill]="RevenueChartOptions.fill">
+                        </apx-chart>
+                    </div>
+                    <div class="ml-auto">
+                        <h3 class="font-medium white-text m-b-0; text-center">20</h3>
+                        <span class="white-text op-5">10 Juillet- 20 Juillet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- column -->
+    <div class="col-lg-4">
+        <div class="card card-hover" style="background-color: grey; color: white">
+            <div class="card-body">
+                <h4 class="card-title" style="font-size:40px;"><i ngbTooltip="Demande de confection de badge" class="fas fa-id-card"></i></h4>
+                <h3 class="white-text m-b-0">
+                    <i class="ti-arrow-up"></i> 7</h3>
+            </div>
+            <div class="d-flex flex-column" style="height: 90px;">
+                <apx-chart [series]="PageviewChartOptions.series" [chart]="PageviewChartOptions.chart"
+                    [stroke]="PageviewChartOptions.stroke" [tooltip]="PageviewChartOptions.tooltip"
+                    [colors]="PageviewChartOptions.colors" [fill]="PageviewChartOptions.fill">
+                </apx-chart>
+            </div>
+        </div>
+    </div>
+    <!-- column -->
+    <div class="col-lg-4">
+        <div class="card  card-hover" style="background-color:'#50BE87'; color: white">
+            <div class="card-body">
+                <h4 class="card-title" style="font-size:40px;"><i ngbTooltip="Demande d'autorisation d'acces" class=" fas fa-unlock-alt"></i></h4>
+                <div class="d-flex no-block align-items-center m-t-30">
+                    <div class="">
+                        <h3 class="font-medium m-b-0">7</h3>
+                        <span class="">Totales</span>
+                    </div>
+                    <div class="ml-auto" style="color: white !important;">
+                        <div class="bounce d-flex flex-column m-b-40" style="color: white !important;">
+                            <apx-chart [series]="BounceChartOptions.series" [chart]="BounceChartOptions.chart"
+                                [stroke]="BounceChartOptions.stroke" [tooltip]="BounceChartOptions.tooltip"
+                                [colors]="BounceChartOptions.colors" [fill]="BounceChartOptions.fill">
+                            </apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center m-b-40">
+    <button class="btn btn-primary" [routerLink]="['/signalisation/list-signalisation']" style="margin-right: 10px;">Voir toutes les signalisations</button>
+    <button class="btn text-white" style="background-color: grey;" [routerLink]="['/demande/listDemandes']">Voir toutes les demandes</button>
+    <!-- col -->
+    <!-- <div class="col-sm-12 col-lg-4 mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Demandes</h4>
+                <div class="m-t-20 d-flex flex-column m-auto">
+                    <apx-chart [series]="DeviceSalesChartOptions.series" [chart]="DeviceSalesChartOptions.chart"
+                        [dataLabels]="DeviceSalesChartOptions.dataLabels" [legend]="DeviceSalesChartOptions.legends"
+                        [colors]="DeviceSalesChartOptions.colors" [stroke]="DeviceSalesChartOptions.stroke"
+                        [labels]="DeviceSalesChartOptions.labels" [tooltip]="DeviceSalesChartOptions.tooltip"
+                        [plotOptions]="DeviceSalesChartOptions.plotOptions"></apx-chart>
+                </div>
+                    <ul class="list-inline text-center mt-3">
+                    <li class="list-inline-item">
+                        <i class="fa fa-circle text-info"></i> Demandes de Badges </li>
+                    <li class="list-inline-item">
+                        <i class="fa fa-circle text-cyan"></i> Demandes d'autorisation d'accès</li>
+                    <li class="list-inline-item">
+                        <i class="fa fa-circle text-orange"></i> Autres</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div> -->
